@@ -3,7 +3,8 @@ import "./Home.css"
 
 export default function Home() {
   let [list, setList] = useState<any[]>([])
-  let [list2, setList2] = useState<any[]>([])
+  let [listOrigin, setListOrigin] = useState<any[]>([])
+
   let [number, setNumber] = useState<any>("")
   const getData = function () {
     fetch("https://randomuser.me/api/?results=100").then((res) => res.json()).then((data) => {
@@ -22,30 +23,56 @@ export default function Home() {
       arr = arr.sort((a: any, b: any) =>
         a.list.length - b.list.length
       )
-      console.log(arr);
+      setListOrigin([...arr])
       setList(arr)
     })
   }
   const selectChange = (e: any) => {
-    console.log(e.target.value);
+    let val = e.target.value
+    let arr = genderQuery(val)
+    setList(arr)
+  }
+  const genderQuery = (val: any) => {
+    setNumber("")
+    let arr: any = []
+    if (val !== "all") {
+      listOrigin.forEach((el: any) => {
+        let arr2: any = []
+        el.list.forEach((item: any) => {
+          arr2.push(item)
+        })
+        arr.push({
+          country: el.country,
+          list: JSON.parse(JSON.stringify(arr2)).filter((item: any) => item.gender === val)
+        })
+      })
+    } else {
+      arr = JSON.parse(JSON.stringify(list))
+    }
+    return arr
   }
   const openItem = (index: number) => {
-    setNumber(index)
+    if (index === number) {
+      setNumber('')
+
+    } else {
+      setNumber(index)
+    }
   }
   useEffect(() => {
     getData()
   }, [])
   return (
     <div>
-      <select name="gender" value={''} id="" onChange={(e) => selectChange(e)}>
-        <option value="1">male</option>
-        <option value="0">female</option>
-        <option value="2">all</option>
+      <select name="gender" defaultValue="all" id="" onChange={(e) => selectChange(e)}>
+        <option value="male">male</option>
+        <option value="female">female</option>
+        <option value="all">all</option>
       </select>
       <div>
         {list.map((el, index) => {
-          return <div onClick={() => openItem(index)}>
-            <div className='btn' key={index} >{el.country}</div>
+          return <div key={index} onClick={() => openItem(index)}>
+            <div className='btn' >{el.country}</div>
             {number === index && <div className='box'>
               {el.list.map((item: any, i: number) => {
                 return <div key={i}>
