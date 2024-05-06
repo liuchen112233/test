@@ -47,7 +47,7 @@ export default function Home() {
         })
       })
     } else {
-      arr = JSON.parse(JSON.stringify(list))
+      arr = JSON.parse(JSON.stringify(listOrigin))
     }
     return arr
   }
