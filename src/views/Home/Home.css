@@ -19,3 +19,9 @@
 .item>div{
   margin: 10px;
 }
+
+select{
+  margin:20px;
+  width: 200px;
+  padding: 5px;
+}

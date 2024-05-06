@@ -4,6 +4,7 @@ import "./Home.css"
 export default function Home() {
   let [list, setList] = useState<any[]>([])
   let [list2, setList2] = useState<any[]>([])
+  let [number, setNumber] = useState<any>("")
   const getData = function () {
     fetch("https://randomuser.me/api/?results=100").then((res) => res.json()).then((data) => {
       let arr: any = []
@@ -15,7 +16,6 @@ export default function Home() {
           arr.push({
             country: el.location.country,
             list: [el],
-            choosed: false
           })
         }
       })
@@ -29,23 +29,26 @@ export default function Home() {
   const selectChange = (e: any) => {
     console.log(e.target.value);
   }
+  const openItem = (index: number) => {
+    setNumber(index)
+  }
   useEffect(() => {
     getData()
   }, [])
   return (
     <div>
-      <select name="" id="" onChange={(e) => selectChange(e)}>
+      <select name="gender" value={''} id="" onChange={(e) => selectChange(e)}>
         <option value="1">male</option>
         <option value="0">female</option>
         <option value="2">all</option>
       </select>
       <div>
         {list.map((el, index) => {
-          return <div>
+          return <div onClick={() => openItem(index)}>
             <div className='btn' key={index} >{el.country}</div>
-            <div className='box'>
+            {number === index && <div className='box'>
               {el.list.map((item: any, i: number) => {
-                return <div  key={i}>
+                return <div key={i}>
                   <div className='item'>
                     <div>name : {item.name.first} {item.name.last}</div>
                     <div>gender : {item.gender}</div>
@@ -55,7 +58,7 @@ export default function Home() {
                   </div>
                 </div>
               })}
-            </div>
+            </div>}
           </div>
         })}
       </div>
