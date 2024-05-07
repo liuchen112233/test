@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import "./Home.css"
-
+import moment from 'moment'
 export default function Home() {
   let [list, setList] = useState<any[]>([])
   let [listOrigin, setListOrigin] = useState<any[]>([])
@@ -23,6 +23,16 @@ export default function Home() {
       arr = arr.sort((a: any, b: any) =>
         a.list.length - b.list.length
       )
+      arr.forEach((el: any) => {
+        el.list = el.list.sort((a: any, b: any) => {
+          b.registered.date = moment(b.registered.date).format("YYYY-MM-DD")
+          b.registered.newDate = new Date(b.registered.date)
+          a.registered.date = moment(a.registered.date).format("YYYY-MM-DD")
+          a.registered.newDate = new Date(a.registered.date)
+          return b.registered.newDate - a.registered.newDate
+        })
+      })
+      console.log(moment("2014-04-02T21:08:44.316Z").format("YYYY-MM-DD"));
       setListOrigin([...arr])
       setList(arr)
     })
